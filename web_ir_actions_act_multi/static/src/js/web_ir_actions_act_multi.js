@@ -26,7 +26,7 @@ odoo.define('web_ir_actions_act_multi.ir_actions_act_multi', function (require) 
          * @param {Object} action see _handleAction() parameters
          * @param {Object} options see _handleAction() parameters
          * @param {integer|undefined} index Index of action being handled
-         * @returns {$.Promise}
+         * @returns {Promise}
          */
         _executeMultiAction: function (action, options, index) {
             var self = this;
