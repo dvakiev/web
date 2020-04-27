@@ -25,29 +25,20 @@ odoo.define('web_ir_actions_act_multi.ir_actions_act_multi', function (require) 
          * Handle 'ir.actions.act_multi' action
          * @param {Object} action see _handleAction() parameters
          * @param {Object} options see _handleAction() parameters
-         * @param {integer|undefined} index Index of action being handled
-         * @returns {Promise}
+         * @returns {$.Promise}
          */
         _executeMultiAction: function (action, options, index) {
-            var self = this;
+            const self = this;
 
-            if (index === undefined) {
-                index = 0; // eslint-disable-line no-param-reassign
-            }
-
-            if (index === action.actions.length - 1) {
-                return this._handleAction(action.actions[index], options);
-            } else if (index >= action.actions.length) {
-                return Promise.resolve();
-            }
-
-            return this
-                ._handleAction(action.actions[index], options)
-                .then(function () {
-                    return self._executeMultiAction(action, options, index + 1);
-                });
+            return action.actions
+                .map(item => {
+                    return () => {
+                        return self._handleAction(item, options);
+                    };
+                })
+                .reduce((prev, cur) => {
+                    return prev.then(cur);
+                }, Promise.resolve());
         },
-
     });
-
 });
